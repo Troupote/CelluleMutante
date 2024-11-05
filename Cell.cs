@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace CelluleMutante2
         public Cell()
         {
             size = 10;
-            color = Color.Black;
+            color = Color.FromArgb(0, 0, 0);
             genetic = "A";
         }
 
@@ -29,6 +30,12 @@ namespace CelluleMutante2
 
                 int i = 0;
                 string chaine = "";
+                int TotTGT = 0;
+                int TotATT = 0;
+                int TotCTC = 0;
+                int TotACT = 0;
+                int TotGTC = 0;
+                int TotGAA = 0;
 
                 while (i < genetic.Length - 3)
                 {
@@ -36,30 +43,99 @@ namespace CelluleMutante2
                     switch (chaine)
                     {
                         case "TGT":
-                            color = Color.FromArgb(0, 0, 0);
+                            TotTGT += 1;
                             break;
                         case "ATT":
-                            color = Color.FromArgb(0, 0, 255);
+                            TotATT += 1;
                             break;
                         case "CTC":
-                            color = Color.FromArgb(0, 255, 255);
+                            TotCTC += 1;
                             break;
                         case "ACT":
-                            color = Color.FromArgb(255, 0, 255);
+                            TotACT += 1;
                             break;
                         case "GTC":
-                            color = Color.FromArgb(255, 165, 0);
+                            TotGTC += 1;
                             break;
                         case "GAA":
-                            color = Color.FromArgb(0, 255, 0);
+                            TotGAA += 1;
                             break;
                     }
                     i++;
                 }
+
+                int[] totals = { TotTGT, TotATT, TotCTC, TotACT, TotGTC, TotGAA };
+                int MaxPatern = totals.Max();
+
+                switch (MaxPatern)
+                {
+                    case 0:
+                        color = Color.FromArgb(0, 0, 0);
+                        break;
+                    case 1:
+                        color = Color.FromArgb(0, 0, 255);
+                        break;
+                    case 2:
+                        color = Color.FromArgb(0, 255, 255);
+                        break;
+                    case 3:
+                        color = Color.FromArgb(255, 0, 255);
+                        break;
+                    case 4:
+                        color = Color.FromArgb(255, 165, 0);
+                        break;
+                    case 5:
+                        color = Color.FromArgb(0, 255, 0);
+                        break;
+                    default:
+                        color = Color.FromArgb(255, 0, 0);
+                        break;
+
+                }
+
+                Debug.Print("TGT: " + TotTGT + " ATT: " + TotATT + " CTC: " + TotCTC + " ACT: " + TotACT + " GTC: " + TotGTC + " GAA: " + TotGAA);
+
+            }
+            int j = 0;
+            List<string> tempList = new List<string>();
+            while (j < genetic.Length)
+            {
+                switch (genetic[j])
+                {
+                    case 'A':
+                        int tempa = rnd.Next(0, 100);
+                        if (tempa <= 15)
+                        {
+                            tempList.Add("T");
+                        }
+                        break;
+                    case 'T':
+                        int tempt = rnd.Next(0, 100);
+                        if (tempt <= 7)
+                        {
+                            tempList.Add("AA");
+                        }
+                        break;
+                    case 'C':
+                        int tempc = rnd.Next(0, 100);
+                        if (tempc <= 21)
+                        {
+                            tempList.Add("G");
+                        }
+                        break;
+                    case 'G':
+                        int tempg = rnd.Next(0, 100);
+                        if (tempg <= 4)
+                        {
+                            tempList.Add("CG");
+                        }
+                        break;
+                }
+                j++;
             }
 
+            genetic += string.Join("", tempList);
 
-            
             size += 5;
             
         }
