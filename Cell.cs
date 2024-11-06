@@ -25,49 +25,65 @@ namespace CelluleMutante2
         public void Mutation()
         {
 
+            string tempGenetic = genetic;
+
+            string[] Nucleotide = { "A", "T", "C", "G" };
+
             if (genetic.Length > 3)
             {
 
                 int i = 0;
                 string chaine = "";
-                int TotTGT = 0;
-                int TotATT = 0;
-                int TotCTC = 0;
-                int TotACT = 0;
-                int TotGTC = 0;
-                int TotGAA = 0;
+                Dictionary<string, int> Occurences = new Dictionary<string, int>
+                {
+                    { "TGT", 0 },
+                    { "ATT", 0 },
+                    { "CTC", 0 },
+                    { "ACT", 0 },
+                    { "GTC", 0 },
+                    { "GAA", 0 }
+                };
 
                 while (i < genetic.Length - 3)
                 {
+                    int temprnd = rnd.Next(0, 100);
                     chaine = genetic.Substring(i, 3);
                     switch (chaine)
                     {
                         case "TGT":
-                            TotTGT += 1;
+                            Occurences["TGT"] += 1;
                             break;
                         case "ATT":
-                            TotATT += 1;
+                            Occurences["ATT"] += 1;
                             break;
                         case "CTC":
-                            TotCTC += 1;
+                            Occurences["CTC"] += 1;
                             break;
                         case "ACT":
-                            TotACT += 1;
+                            Occurences["ACT"] += 1;
                             break;
                         case "GTC":
-                            TotGTC += 1;
+                            Occurences["TGT"] += 1;
                             break;
                         case "GAA":
-                            TotGAA += 1;
+                            Occurences["TGT"] += 1;
                             break;
                     }
+
+                    if (temprnd <= 5)
+                    {
+                        tempGenetic = tempGenetic.Insert(i + 1, Nucleotide[rnd.Next(0, 4)]); 
+                    }
+
                     i++;
                 }
 
-                int[] totals = { TotTGT, TotATT, TotCTC, TotACT, TotGTC, TotGAA };
-                int MaxPatern = totals.Max();
 
-                switch (MaxPatern)
+                int MaxPatern = Occurences.Values.Max();
+                int MaxIndex = Occurences.Values.ToList().IndexOf(MaxPatern);
+
+
+                switch (MaxIndex)
                 {
                     case 0:
                         color = Color.FromArgb(0, 0, 0);
@@ -88,12 +104,11 @@ namespace CelluleMutante2
                         color = Color.FromArgb(0, 255, 0);
                         break;
                     default:
-                        color = Color.FromArgb(255, 0, 0);
+                        color = Color.FromArgb(0, 0, 0);
                         break;
 
                 }
 
-                Debug.Print("TGT: " + TotTGT + " ATT: " + TotATT + " CTC: " + TotCTC + " ACT: " + TotACT + " GTC: " + TotGTC + " GAA: " + TotGAA);
 
             }
             int j = 0;
@@ -134,9 +149,22 @@ namespace CelluleMutante2
                 j++;
             }
 
-            genetic += string.Join("", tempList);
+            tempGenetic += string.Join("", tempList);
 
-            size += 5;
+            int compteur = 0;
+            foreach (char letter in genetic)
+            {
+                if (letter == 'T')
+                {
+                    compteur++;
+                }
+            }
+            
+            size += tempGenetic.Length / 5 + Math.Min(compteur, genetic.Length);
+            
+            genetic = tempGenetic;
+
+
             
         }
     }
